@@ -1,8 +1,18 @@
 const puppeteer = require("puppeteer");
 
-async function start(){
+const arabam = async(req,res) => {
+   
+   try{
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+    await page.setRequestInterception(true)
+    page.on("request", (request) => {
+      if (request.resourceType() === "document") {
+          request.continue()
+      } else {
+          request.abort()
+      }
+  })
     let src = "https://www.arabam.com";
     var counter = 0;
     var index = -1;
@@ -40,7 +50,11 @@ async function start(){
     console.log(models);
 
     await browser.close();
+    res.status(200).json({ message: 'arabam is working!yay!' })
 }
-start();
+  catch (error) {
+    return res.status(500).send(error.message)
+  }
+}
 
-export default start;
+export default arabam;
