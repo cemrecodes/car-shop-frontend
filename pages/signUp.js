@@ -48,15 +48,12 @@ function signUp({ customers }){
         method:'POST',
         body: JSON.stringify(item),
         headers:{
-          "Access-Control-Allow-Origin":"no-cors",
           "Content-Type":'application/json',
           "Accept":"application/json"
         }
-      
-
       })
       result = await result.json();
-      alert("succesful")
+      alert("Succesful!")
       console.warn("Result: ", result)
 
   }

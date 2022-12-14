@@ -24,6 +24,11 @@ const arabam = async(req,res) => {
     });
 
     // console.log(names);
+
+    
+    const imgs = await page.$$eval("img.listing-image.loaded", (imgs) =>
+    {  return imgs.map((x) => x.src);})
+    console.log("imgs: " + imgs);
     
     // arabalarin tam model andlarını almak için url detaylari
     const hrefs = await page.evaluate(
@@ -56,4 +61,5 @@ const arabam = async(req,res) => {
     return res.status(500).send(error.message)
   }
 }
-arabam();
+// arabam();
+export default arabam;

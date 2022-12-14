@@ -21,6 +21,7 @@
     "react-bootstrap": "^2.6.0",
     "react-dom": "18.2.0",
     "react-owl-carousel": "^2.3.3",
+    "request": "^2.88.2",
     "window": "^1.0.0"
   },
   "devDependencies": {

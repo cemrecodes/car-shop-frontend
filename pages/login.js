@@ -2,51 +2,75 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-export const getStaticProps = async () => {
-    const request = await fetch(
-        `http://localhost:2000/api/customers`
-    );
-    const customers = await request.json();
+// export const getStaticProps = async () => {
+//     const request = await fetch(
+//         `http://localhost:2000/api/customers`
+//     );
+//     const customers = await request.json();
     
-    return {
-        props: {
-            customers,
-        },
-    };
-}
+//     return {
+//         props: {
+//             customers,
+//         },
+//     };
+// }
 
 
 
-const Login = ({customers}) => {
-    const router = useRouter();
-    const [error, setError] = useState(null);
+const Login = ({}) => {
+  //  const router = useRouter();
+  // const [error, setError] = useState(null);
 
     const handleSubmit = async (event) => {
         
         event.preventDefault();
 
         // Get the email and password values from the form
-        const email = event.currentTarget.email.value;
-        const password = event.currentTarget.password.value;
-        console.log(email + " " + password);
-// Convert the users variable to an array
-const customersArray = Array.from(customers.data);
-        console.log(customersArray);
-        const hasMatch = customersArray.some(
-            (customer) => customer.Email=== email && customer.Password === password
-        );
+        const Email = event.currentTarget.email.value;
+        const Password = event.currentTarget.password.value;
+        let item={Email,Password}
 
-        console.log(hasMatch);
-        // If a user was found, set a cookie and redirect to the dashboard
-        if (hasMatch) {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        
+        var raw = JSON.stringify(item);
+        
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+        
+        fetch("http://localhost:2000/api/customers/login", requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result),
+                alert("Login is successful!"))
+          .catch(error => console.log('error', error));
+        
+        }
+          
+      
+        
+
+// Convert the users variable to an array
+// const customersArray = Array.from(customers.data);
+//         console.log(customersArray);
+//         const hasMatch = customersArray.some(
+//             (customer) => customer.Email=== email && customer.Password === password
+//         );
+
+//         console.log(hasMatch);
+//         // If a user was found, set a cookie and redirect to the dashboard
+//         if (hasMatch) {
             
 
-            router.push('/');
-        } else {
-            // If no user was found, show an error
-            setError('Invalid email or password');
-        }
-    };
+//             router.push('/');
+//         } else {
+//             // If no user was found, show an error
+//             setError('Invalid email or password');
+//         }
+    
 
     return (
         <><Head>
@@ -108,7 +132,7 @@ const customersArray = Array.from(customers.data);
                 />                
               </div>
               <div className="form-group" >
-              {error && <p>{error}</p>}
+              {/* {error && <p>{error}</p>} */}
                 <button
                   type="submit"
                   className="form-control btn btn-primary rounded submit px-3"
