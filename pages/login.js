@@ -44,8 +44,7 @@ const Login = ({}) => {
         
         fetch("http://localhost:2000/api/customers/login", requestOptions)
           .then(response => response.text())
-          .then(result => console.log(result),
-                alert("Login is successful!"))
+          .then(result => (console.log(result), alert(result)) )
           .catch(error => console.log('error', error));
         
         }
