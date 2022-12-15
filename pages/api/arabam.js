@@ -1,65 +1,96 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer")
+const cheerio = require("cheerio")
+const chrome = require("chrome-aws-lambda")
 
-const arabam = async(req,res) => {
-   
-   try{
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+const exePath =
+process.platform === "win64"
+"C:\Program Files\Google\Chrome\Application\chrome.exe"
+const getOptions = async () => {
+  let options
+  if (process.env.NODE_ENV === "production") {
+    options = {
+      args: chrome.args,
+      executablePath: await chrome.executablePath,
+      headless: chrome.headless,
+    }
+  } else {
+    options = {
+      args: [],
+      executablePath: exePath,
+      headless: true,
+    }
+  }
+  return options
+}
+
+const getArabam = async (req, res) => {
+  const detailSelector = ".horizontal-half-padder-minus h4 .listing-text-new "
+  const modelSelector = ".listing-modelname h3 .listing-text-new "
+  const priceSelector = ".listing-price"
+  const yearSelector = ".tac .fade-out-content-wrapper a"
+  const imageSelector = ".listing-image "
+  const urlSelector=".pr10 a"
+  const properties = req.body.properties
+
+  try {
+    const options = await getOptions()
+    const browser = await puppeteer.launch(options)
+    const page = await browser.newPage()
     await page.setRequestInterception(true)
     page.on("request", (request) => {
       if (request.resourceType() === "document") {
-          request.continue()
+        request.continue()
       } else {
-          request.abort()
+        request.abort()
       }
-  })
-    let src = "https://www.arabam.com";
-    var counter = 0;
-    var index = -1;
-    var models = [];
+    })
 
-    await page.goto("https://www.arabam.com/ikinci-el?searchText=e+200&sort=priceTl.asc");
-    const names  = await page.$$eval("span.db.no-wrap.listing-price",(texts)=>{
-        return texts.map((x) => x.textContent);
-    });
+    await page.goto("https://www.arabam.com/ikinci-el?searchText=bmw", { timeout: 0 }).then(async (response) => {})
+    const html = await page.evaluate(() => {
+      return document.querySelector("body").innerHTML
+    })
+    const $ = cheerio.load(html)
 
-    // console.log(names);
-
-    
-    const imgs = await page.$$eval("img.listing-image.loaded", (imgs) =>
-    {  return imgs.map((x) => x.src);})
-    console.log("imgs: " + imgs);
-    
-    // arabalarin tam model andlarını almak için url detaylari
-    const hrefs = await page.evaluate(
-        () => Array.from(
-          document.querySelectorAll('a.link-overlay'),
-          a => a.getAttribute('href')
-        )
-      );
-
-    // her href ile sitelere ulasip model adi alma
-    for (counter;counter<hrefs.length;counter++){
-        if (counter%2 == 0)
-          await findCarNames(hrefs[counter]);
+    // create empty result set, assume selectors will return same number of results
+    let result = []
+    for (let i = 0; i < $(detailSelector).length; i++) {
+      result.push({})
     }
 
-    async function findCarNames(item){
-        index++;
-        await page.goto(src.concat(item));
-        models[index]  = await page.$$eval("p.advert-detail-title",(texts)=>{
-        return texts.map((x) => x.textContent);
-    });
-    }
+    // fill result set by parsing the html for each property selector
+    $(detailSelector).each((i, elem) => {
+        result[i].detail = $(elem).text()
+      })
+      $(modelSelector).each((i, elem) => {
+        result[i].model = $(elem).text()
+      })
+      $(priceSelector).each((i, elem) => {
+        result[i].price = $(elem).text()
+      })
+      $(yearSelector).each((i, elem) => {
+        result[i].year = $(elem).text()
+      })
+      $(imageSelector).each((i, elem) => {
+    let href = $(elem).attr("data-src")
+      if (href.charAt(0) === "/") href = "https://www.arabam.com/ikinci-el?searchText=bmw" + href
+        result[i].image = href
+      })
+      $(urlSelector).each((i, elem) => {
+        let href = $(elem).attr("href")
+          if (href.charAt(0) === "/") href = "https://www.arabam.com/" + href
+            result[i].url = href
+          })
 
-    console.log(models);
-
-    await browser.close();
-    res.status(200).json({ message: 'arabam is working!yay!' })
-}
-  catch (error) {
-    return res.status(500).send(error.message)
+    await browser.close()
+    res.status(200).json({ statusCode: 200, result })
+  } catch(error) {
   }
 }
-// arabam();
-export default arabam;
+
+export default getArabam
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+}

@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    domains: ['arbstorage.mncdn.com','cdn.webrazzi.com', 'shiftdelete.net','i.hbrcdn.com'],
+  },
   
 }
 const webpack = require('webpack');
