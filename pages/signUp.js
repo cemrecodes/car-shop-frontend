@@ -144,7 +144,7 @@ function signUp({ customers }){
                   onClick={Register}
                   className="form-control btn btn-primary rounded submit px-3"
                 >
-                  Sign In
+                  Sign Up
                 </button>
               </div>
             </form>

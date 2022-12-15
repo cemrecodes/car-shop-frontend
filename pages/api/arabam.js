@@ -1,6 +1,8 @@
 const puppeteer = require("puppeteer")
 const cheerio = require("cheerio")
 const chrome = require("chrome-aws-lambda")
+const src = "https://www.arabam.com/ikinci-el?searchText="
+var search = "volkwagen"
 
 const exePath =
 process.platform === "win64"
@@ -44,8 +46,10 @@ const getArabam = async (req, res) => {
         request.abort()
       }
     })
+    
+    let url = src + search;
 
-    await page.goto("https://www.arabam.com/ikinci-el?searchText=bmw", { timeout: 0 }).then(async (response) => {})
+    await page.goto(url, { timeout: 0 }).then(async (response) => {})
     const html = await page.evaluate(() => {
       return document.querySelector("body").innerHTML
     })
