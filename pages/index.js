@@ -121,6 +121,7 @@ const Home = ({ operations, incidents }) => {
                         <div class="card-body" >
                           <h5 class="card-title"> {post.model}</h5>
                           <p class="card-text">{post.detail}</p>
+                           <h4 class="card-text">{post.price}</h4>
                         </div>
                         
                       </div>
