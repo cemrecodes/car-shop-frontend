@@ -18,8 +18,7 @@ import Head from 'next/head';
 
 
 const Login = ({}) => {
-  //  const router = useRouter();
-  // const [error, setError] = useState(null);
+    const [logged, setLoggedIn] = useState("");
 
     const handleSubmit = async (event) => {
         
@@ -43,7 +42,22 @@ const Login = ({}) => {
         };
         
         fetch("http://localhost:2000/api/customers/login", requestOptions)
-          .then(response => response.text())
+          .then(response => ({
+            res: response.json().then((res) => {
+              console.warn("Res:  ", res);
+              if( res.success == 1){
+              localStorage.setItem('login',JSON.stringify({
+                login: true,
+                token: res.token
+              })),
+              setLoggedIn(true)
+            }
+             else{
+              setLoggedIn(false),
+              alert("Wrong email/password!")
+             }             
+            })         
+          },response.text()))
           .then(result => (console.log(result), alert(result)) )
           .catch(error => console.log('error', error));
         
@@ -99,9 +113,7 @@ const Login = ({}) => {
         <section className="ftco-section">
   <div className="container">
     <div className="row justify-content-center">
-      <div className="col-md-6 text-center mb-5">
-        <h2 className="heading-section">Sign In</h2>
-      </div>
+      
     </div>
     <div className="row justify-content-center">
       <div className="col-md-7 col-lg-5">
@@ -110,7 +122,12 @@ const Login = ({}) => {
             className="img"
             style={{ backgroundImage: "url(images/bg-1.jpg)" }}
           />
+          { !logged ? 
+          
           <div className="login-wrap p-4 p-md-5">
+            <div className="col-md-6 text-center mb-5">
+        <h2 className="heading-section">Sign In</h2>
+      </div>
             <form action="#" className="signin-form" onSubmit={handleSubmit}>
               <div className="form-group mt-3">
                 <label className="form-control-placeholder" htmlFor="email">
@@ -134,8 +151,7 @@ const Login = ({}) => {
               {/* {error && <p>{error}</p>} */}
                 <button
                   type="submit"
-                  className="form-control btn btn-primary rounded submit px-3"
-                >
+                  className="form-control btn btn-primary rounded submit px-3">
                   Sign In
                 </button>
               </div>
@@ -145,8 +161,15 @@ const Login = ({}) => {
               <a data-toggle="tab" href="/signUp">
                 Sign Up
               </a>
-            </p>
+            </p>          
           </div>
+          :
+          <div className="p-4 p-md-5">
+            <h1>YOU ARE LOGGED IN</h1>
+
+          </div>
+          
+          }
         </div>
       </div>
     </div>
