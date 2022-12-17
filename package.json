@@ -9,11 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^1.2.1",
     "bootstrap": "^5.2.3",
     "cheerio": "^1.0.0-rc.12",
     "chrome-aws-lambda": "^9.1.0",
+    "cookie": "^0.5.0",
     "ejs": "^3.1.8",
     "jquery": "^3.6.1",
+    "jsonwebtoken": "^8.5.1",
     "next": "13.0.5",
     "njs": "^0.0.2",
     "puppeteer": "^19.4.0",

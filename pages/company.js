@@ -3,17 +3,23 @@ import React,{ useState } from "react";
 
 export const getStaticProps = async () => {
   const request = await fetch(
-      `http://localhost:2000/api/customers`
+      `http://localhost:2000/api/customers`     
   );
   const customers = await request.json();
 
+  const request2 = await fetch(
+    `http://localhost:2000/api/company`     
+);
+const companies = await request2.json();
+
   return {
       props: {
-          customers
+          customers,
+          companies
       },
   };
 }
-function Company({ customers }){
+function Company({ customers,companies }){
   
   const [Email,setEmail]=useState("");
   const [TC,setTC]=useState("");
@@ -27,6 +33,13 @@ function Company({ customers }){
       (customer) => customer.Email === Email
   );
 
+  const companyArray = Array.from(companies.data);
+
+  const hasMatch2 = companyArray.some(
+      (company) => company.Name === Name
+  );
+
+
 
   async function addCompany()
   {
@@ -37,11 +50,16 @@ function Company({ customers }){
       setError("You need to sign up/log in first!");
       
     } 
+    else if(hasMatch2){
+      alert("This company is already registered!");
+      setError("This company is already registered!");
+    }
     else{
 
       let Customer_ID = await fetch('http://localhost:2000/api/customers/getID/' + Email)
       Customer_ID = await Customer_ID.json();
       console.log("tojson: ", Customer_ID.data.Customer_ID)
+      Customer_ID = Customer_ID.data.Customer_ID;
       let item={Name,Address,Customer_ID,TC}
       console.warn(item)
 

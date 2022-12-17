@@ -1,21 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-
-// export const getStaticProps = async () => {
-//     const request = await fetch(
-//         `http://localhost:2000/api/customers`
-//     );
-//     const customers = await request.json();
-    
-//     return {
-//         props: {
-//             customers,
-//         },
-//     };
-// }
-
-
+import axios from 'axios';
 
 const Login = ({}) => {
     const [logged, setLoggedIn] = useState("");
@@ -42,23 +28,26 @@ const Login = ({}) => {
         };
         
         fetch("http://localhost:2000/api/customers/login", requestOptions)
-          .then(response => ({
-            res: response.json().then((res) => {
-              console.warn("Res:  ", res);
-              if( res.success == 1){
-              localStorage.setItem('login',JSON.stringify({
-                login: true,
-                token: res.token
-              })),
-              setLoggedIn(true)
-            }
-             else{
-              setLoggedIn(false),
-              alert("Wrong email/password!")
-             }             
-            })         
-          },response.text()))
-          .then(result => (console.log(result), alert(result)) )
+          .then(response => (
+            // {
+            // res: response.json().then((res) => {
+            //   console.warn("Res:  ", res);
+            //   if( res.success == 1){
+            //   localStorage.setItem('login',JSON.stringify({
+            //     login: true,
+            //     token: res.token
+            //   })),
+            //   setLoggedIn(true)
+            // }
+            //  else{
+            //   setLoggedIn(false),
+            //   alert("Wrong email/password!")
+            //  }             
+            // })},
+            response.text()))
+          .then(async result => (console.log(result)
+          ,await axios.post('api/auth/login', result)
+          , alert(result)) )
           .catch(error => console.log('error', error));
         
         }
