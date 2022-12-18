@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import axios from 'axios';
+import user from './api/user';
 
 const Login = ({}) => {
-    const [logged, setLoggedIn] = useState("");
+    const router = useRouter();
 
     const handleSubmit = async (event) => {
         
@@ -27,30 +28,52 @@ const Login = ({}) => {
           redirect: 'follow'
         };
         
-        fetch("http://localhost:2000/api/customers/login", requestOptions)
-          .then(response => (
-            // {
-            // res: response.json().then((res) => {
-            //   console.warn("Res:  ", res);
-            //   if( res.success == 1){
-            //   localStorage.setItem('login',JSON.stringify({
-            //     login: true,
-            //     token: res.token
-            //   })),
-            //   setLoggedIn(true)
-            // }
-            //  else{
-            //   setLoggedIn(false),
-            //   alert("Wrong email/password!")
-            //  }             
-            // })},
-            response.text()))
-          .then(async result => (console.log(result)
-          ,await axios.post('api/auth/login', result)
-          , alert(result)) )
-          .catch(error => console.log('error', error));
-        
+       const res =  await fetch("http://localhost:2000/api/customers/login", requestOptions)
+          // .then(async response => (
+          //   // {
+          //   // res: response.json().then((res) => {
+          //   //   console.warn("Res:  ", res);
+          //   //   if( res.success == 1){
+          //   //   localStorage.setItem('login',JSON.stringify({
+          //   //     login: true,
+          //   //     token: res.token
+          //   //   })),
+          //   //   setLoggedIn(true)
+          //   // }
+          //   //  else{
+          //   //   setLoggedIn(false),
+          //   //   alert("Wrong email/password!")
+          //   //  }             
+          //   // })},
+          //   response.text()
+          //   ))
+          // .then(result => (
+          //   // await axios.post('api/auth/login', result).then((response) => {
+          //   //   console.log(response);
+          //   // }),
+          //   console.log(result), alert(result) ) )
+          // .catch(error => console.log('error', error));
+           
+          let obj = await res.json();
+          console.log(obj)
+
+          const user = await axios.post('api/auth/login', obj)
+
+          if (user.status == 200)
+              router.push("/dashboard/user");
         }
+
+        // const handleGetUser = async () => {
+        //   const user = await axios.get("/api/user");
+      
+        //   console.log(user);
+        // };
+
+        const handleLogOut = async () => {
+          const user = await axios.get("/api/auth/logout");
+      
+          console.log(user);
+        };
           
       
         
@@ -111,8 +134,7 @@ const Login = ({}) => {
             className="img"
             style={{ backgroundImage: "url(images/bg-1.jpg)" }}
           />
-          { !logged ? 
-          
+          {           
           <div className="login-wrap p-4 p-md-5">
             <div className="col-md-6 text-center mb-5">
         <h2 className="heading-section">Sign In</h2>
@@ -150,13 +172,18 @@ const Login = ({}) => {
               <a data-toggle="tab" href="/signUp">
                 Sign Up
               </a>
-            </p>          
-          </div>
-          :
-          <div className="p-4 p-md-5">
-            <h1>YOU ARE LOGGED IN</h1>
+            </p> 
 
+             <button
+                  onClick={() => handleLogOut()}
+                  type="submit"
+                  className="form-control btn btn-primary rounded submit px-3">
+                  Sign Out
+                </button>         
           </div>
+
+          
+          
           
           }
         </div>

@@ -1,27 +1,18 @@
 import Head from "next/head";
-import Image from "next/image";
-import Script from "next/Script";
-import styles from "../styles/Home.module.css";
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import Card from "../components/Card";
 import React from "react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export const getStaticProps = async () => {
-  const [operationsRes, incidentsRes] = await Promise.all([
-    fetch("http://localhost:3000/api/arabam"),
-    fetch("http://localhost:3000/api/arabam"),
-  ]);
-  
+export const getServerSideProps = async () => {
+  const request = await fetch("http://localhost:2000/api/vehicle/ourvehicles");
 
-  const [operations, incidents] = await Promise.all([
-    operationsRes.json(),
-    incidentsRes.json(),
-  ]);
-  return { props: { operations, incidents } };
+  const posts = await request.json();
+
+  return { props: { posts } };
 };
-const Home = ({ operations, incidents }) => {
+
+
+const Home = ({ posts }) => {
   const [render, setRender] = useState(false);
 
   useEffect(() => {
@@ -104,30 +95,32 @@ const Home = ({ operations, incidents }) => {
             <div className="relative mx-auto max-w-7xl">
               <div class="container text-center">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
-                {operations.result.map((post) => (
-                    <div class="col">
+                {posts.data.map((post) => (
+                    <div class="col col-lg-4 d-flex align-items-stretch">
                       <div class="card">
-                        <a href={post.url}>
+                        <a href={ post.Image_Link}>
 
                        
                         <img
                          
-                          src={post.image}
+                          src={post.Image_Link}
                           class="card-img-top"
                           alt="Hollywood Sign on The Hill"
                         />
                         </a>
 
                         <div class="card-body" >
-                          <h5 class="card-title"> {post.model}</h5>
-                          <p class="card-text">{post.detail}</p>
-                           <h4 class="card-text">{post.price}</h4>
+                        <Link href={ '/car/' + post.Vehicle_ID}>
+                          <h5 class="card-title"> {post.Model}</h5>
+                          <p class="card-text">{post.Brand}</p>
+                           <h4 class="card-text">{post.Price}</h4>
+                        </Link>
                         </div>
                         
                       </div>
                     </div>
                   ))}
-                  {operations.result.map((post) => (
+                  {/* {posts.data.map((post) => (
                     <div class="col">
                       <div class="card">
                         <img
@@ -137,13 +130,12 @@ const Home = ({ operations, incidents }) => {
                           alt="Hollywood Sign on The Hill"
                         />
                         <div class="card-body" >
-                          <h5 class="card-title"> {post.model}</h5>
-                          <p class="card-text">{post.detail}</p>
-                           <h4 class="card-text">{post.price}</h4>
+                          <h5 class="card-title"> {post.Model}</h5>
+                          <p class="card-text">{post.Brand}</p>
                         </div>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
                 </div>
               </div>
             </div>

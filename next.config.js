@@ -4,11 +4,17 @@ const nextConfig = {
   images: {
     domains: ['arbstorage.mncdn.com','cdn.webrazzi.com', 'shiftdelete.net','i.hbrcdn.com'],
   },
+  env: {
+    JWT_ISSUER: "cemre",
+    JWT_AUDIENCE: "you",
+    TOKEN_SECRET: 'token'
+   },
   
 }
 const webpack = require('webpack');
 
 module.exports = {
+  
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
 
         config.plugins.push(new webpack.ProvidePlugin({
