@@ -28,32 +28,7 @@ const Login = ({}) => {
           redirect: 'follow'
         };
         
-       const res =  await fetch("http://localhost:2000/api/customers/login", requestOptions)
-          // .then(async response => (
-          //   // {
-          //   // res: response.json().then((res) => {
-          //   //   console.warn("Res:  ", res);
-          //   //   if( res.success == 1){
-          //   //   localStorage.setItem('login',JSON.stringify({
-          //   //     login: true,
-          //   //     token: res.token
-          //   //   })),
-          //   //   setLoggedIn(true)
-          //   // }
-          //   //  else{
-          //   //   setLoggedIn(false),
-          //   //   alert("Wrong email/password!")
-          //   //  }             
-          //   // })},
-          //   response.text()
-          //   ))
-          // .then(result => (
-          //   // await axios.post('api/auth/login', result).then((response) => {
-          //   //   console.log(response);
-          //   // }),
-          //   console.log(result), alert(result) ) )
-          // .catch(error => console.log('error', error));
-           
+       const res =  await fetch("http://localhost:2000/api/customers/login", requestOptions)           
           let obj = await res.json();
           console.log(obj)
 
@@ -74,28 +49,6 @@ const Login = ({}) => {
       
           console.log(user);
         };
-          
-      
-        
-
-// Convert the users variable to an array
-// const customersArray = Array.from(customers.data);
-//         console.log(customersArray);
-//         const hasMatch = customersArray.some(
-//             (customer) => customer.Email=== email && customer.Password === password
-//         );
-
-//         console.log(hasMatch);
-//         // If a user was found, set a cookie and redirect to the dashboard
-//         if (hasMatch) {
-            
-
-//             router.push('/');
-//         } else {
-//             // If no user was found, show an error
-//             setError('Invalid email or password');
-//         }
-    
 
     return (
         <><Head>

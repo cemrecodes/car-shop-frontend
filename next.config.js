@@ -7,7 +7,8 @@ const nextConfig = {
   env: {
     JWT_ISSUER: "cemre",
     JWT_AUDIENCE: "you",
-    TOKEN_SECRET: 'token'
+    TOKEN_SECRET: 'token',
+    EMAIL: ""
    },
   
 }

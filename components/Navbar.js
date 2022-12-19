@@ -1,3 +1,5 @@
+import mail from "../middleware";
+
 export default function Navbar(){
     return(
     <nav
@@ -31,16 +33,22 @@ export default function Navbar(){
                 Cars
               </a>
             </li>
+            <><li className="nav-item">
+                  <a href="/signUp" className="nav-link">
+                    Sign Up
+                  </a>
+                </li><li className="nav-item">
+                    <a href="/login" className="nav-link">
+                      Sign In
+                    </a>
+                  </li></>
+         
             <li className="nav-item">
-              <a href="/signUp" className="nav-link">
-                Sign Up
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/login" className="nav-link">
-                Sign In
-              </a>
-            </li>
+                  <a href="/signUp" className="nav-link">
+                    Log Out
+                  </a>
+                </li>
+          
             <li className="nav-item">
               <a href="/company" className="nav-link">
                 Company

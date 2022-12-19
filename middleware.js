@@ -4,7 +4,8 @@ import { decodeJwt, jwtVerify } from "jose";
 const secret = process.env.TOKEN_SECRET;
 
 export async function middleware(req){
-
+  //console.log(req)
+    var mail = undefined;
     const auth = req.cookies.get('Cookie')
     console.log("AUTH ",auth)
     // const claims = decodeJwt(auth.value)
@@ -17,7 +18,9 @@ export async function middleware(req){
         try {
             console.log("try")
             const user  = await jwtVerify(auth.value , new TextEncoder().encode(secret));
-            console.log("USER:" ,user)
+            console.log("USER:" ,user.payload.email)
+            mail = user.payload.email;
+            console.log(mail)
             return NextResponse.next();
             // return NextResponse.redirect(new URL("/dashboard/user", req.url));
           } catch (error) {
@@ -25,33 +28,33 @@ export async function middleware(req){
             return NextResponse.redirect(new URL("/login", req.url));
           }
     }
-    if (auth) {
-    if (req.nextUrl.pathname.includes("/login")) {
-      try {
-        await jwtVerify(auth, new TextEncoder().encode("secret"));
-        console.log(new TextEncoder().encode("secret"))
-        return NextResponse.redirect(new URL("/dashboard/user", req.url));
-      } catch (error) {
-        return NextResponse.next();
-      }
-    }
-  }
-        // return NextResponse.rewrite(new URL('/login', req.nextUrl))
-        try {
-            const { payload } = await jwtVerify(
-              auth,
-              new TextEncoder().encode("secret")
-            );
-            console.log({ payload });
-            return NextResponse.next();
-          } catch (error) {
-            return NextResponse.redirect(new URL("/login", req.url));
-          }
+  //   if (auth) {
+  //   if (req.nextUrl.pathname.includes("/login")) {
+  //     try {
+  //       await jwtVerify(auth, new TextEncoder().encode("secret"));
+  //       console.log(new TextEncoder().encode("secret"))
+  //       return NextResponse.redirect(new URL("/dashboard/user", req.url));
+  //     } catch (error) {
+  //       return NextResponse.next();
+  //     }
+  //   }
+  // }
+  //       // return NextResponse.rewrite(new URL('/login', req.nextUrl))
+  //       try {
+  //           const { payload } = await jwtVerify(
+  //             auth,
+  //             new TextEncoder().encode("secret")
+  //           );
+  //           console.log({ payload });
+  //           return NextResponse.next();
+  //         } catch (error) {
+  //           return NextResponse.redirect(new URL("/login", req.url));
+  //         }
 
 }
 
 export const config={
-    matcher: ["/dashboard/:path*"]
+    matcher: ["/dashboard/:path*","/addCar","/company"]
 }
 
     
