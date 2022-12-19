@@ -1,5 +1,11 @@
-export default function Navbar(){
-    return(
+import axios from 'axios';
+export default function Navbar() {
+  const handleLogOut = async () => {
+    const user = await axios.get("/api/auth/logout");
+
+    console.log(user);
+  };
+  return (
     <nav
       className="navbar sticky-top navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
       id="ftco-navbar"
@@ -31,25 +37,68 @@ export default function Navbar(){
                 Cars
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/signUp" className="nav-link">
-                Sign Up
+
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+              Account
               </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="/login" class="dropdown-item" >
+                    Sign In
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" onClick={() => handleLogOut()}>
+                    Sign Out
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/signUp">
+                   Sign Up
+                  </a>
+                </li>
+              </ul>
             </li>
-            <li className="nav-item">
-              <a href="/login" className="nav-link">
-                Sign In
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+              Company 
               </a>
-            </li>
-            <li className="nav-item">
-              <a href="/company" className="nav-link">
-                Company
-              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="/company" class="dropdown-item" >
+                    Company Login
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">
+                    Company's Vehicle
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/addCar">
+                   Add Vehicle
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
       </div>
     </nav>
- 
-    )
+  );
 }

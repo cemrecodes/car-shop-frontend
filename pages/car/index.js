@@ -111,9 +111,9 @@ const Home = ({ posts }) => {
 
                         <div class="card-body" >
                         <Link href={ '/car/' + post.Vehicle_ID}>
-                          <h5 class="card-title"> {post.Model}</h5>
-                          <p class="card-text">{post.Brand}</p>
-                           <h4 class="card-text">{post.Price}</h4>
+                          <h5 class="card-title"> {post.Model} Model</h5>
+                          <p class="card-text">{post.Brand} </p>
+                           <h4 class="card-text">{post.Price} TL</h4>
                         </Link>
                         </div>
                         
